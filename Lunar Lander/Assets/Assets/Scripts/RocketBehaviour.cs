@@ -4,24 +4,30 @@ using UnityEngine;
 
 public class RocketBehaviour : MonoBehaviour
 {
+    enum LandType
+    {
+        nonLanded,
+        successful,
+        failed
+    }
     public delegate void OnRocketDeath();
     public static OnRocketDeath RocketDeath;
 
     public delegate void OnRocketSuccessfulLanding();
     public static OnRocketSuccessfulLanding RocketWin;
 
+    LandType land = LandType.nonLanded;
+
     Rigidbody2D rig;
     SpriteRenderer spriteR;
     public float impulseSpeed;
     public float torqueSpeed;
     new ParticleSystem particleSystem;
-    BoxCollider2D dMeasurer;
     void Start()
     {
         rig = GetComponent<Rigidbody2D>();
         spriteR = GetComponent<SpriteRenderer>();
         particleSystem = GetComponent<ParticleSystem>();
-        dMeasurer = GetComponentInChildren<BoxCollider2D>();
         RocketDeath += KillRocket;
     }
 
@@ -34,32 +40,32 @@ public class RocketBehaviour : MonoBehaviour
     void MovementSpaceLimiter()
     {
         Bounds bounds = CameraUtils.OrthographicBounds();
-        
+
         bool outleft = transform.position.x < bounds.min.x + transform.localScale.y;
-        if(outleft)
+        if (outleft)
         {
-            transform.position = new Vector3(bounds.min.x + transform.localScale.y,transform.position.y);
-            
+            transform.position = new Vector3(bounds.min.x + transform.localScale.y, transform.position.y);
+
         }
 
         bool outright = transform.position.x > bounds.max.x - transform.localScale.y;
-        if(outright)
+        if (outright)
         {
             transform.position = new Vector3(bounds.max.x - transform.localScale.y, transform.position.y);
-           
+
         }
 
         bool outup = transform.position.y > bounds.max.y - transform.localScale.y;
         if (outup)
         {
             transform.position = new Vector3(transform.position.x, bounds.max.y - transform.localScale.y);
-            
+
         }
     }
 
     void FixedUpdate()
     {
-        if(Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.UpArrow))
+        if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.UpArrow))
         {
             rig.AddForce(transform.up * impulseSpeed * Time.fixedDeltaTime, ForceMode2D.Impulse);
             if (!particleSystem.isPlaying)
@@ -68,36 +74,57 @@ public class RocketBehaviour : MonoBehaviour
                 particleSystem.Emit(1);
         }
 
-        if(Input.GetKey(KeyCode.RightArrow))
+        if (Input.GetKey(KeyCode.RightArrow))
         {
             rig.AddTorque(-torqueSpeed * Time.fixedDeltaTime, ForceMode2D.Force);
         }
 
-        if(Input.GetKey(KeyCode.LeftArrow))
+        if (Input.GetKey(KeyCode.LeftArrow))
         {
             rig.AddTorque(torqueSpeed * Time.fixedDeltaTime, ForceMode2D.Force);
         }
+
+        RaycastHit2D hitInfo = Physics2D.Raycast(transform.position, Vector3.down);
+
+        if(hitInfo)
+            if(hitInfo.transform.tag == "Terrain")
+            {
+                Debug.Log(hitInfo.collider.name);
+            }
     }
 
     void OnCollisionEnter2D(Collision2D col)
     {
-
         if (col.gameObject.tag == "Terrain")
         {
             Debug.Log(rig.velocity);
-            rig.gravityScale *= 5f;
-            if (rig.velocity.y > 0.5f || rig.velocity.y < -0.5f || rig.velocity.x > 0.5f || rig.velocity.x < -0.5f)
+            if (land == LandType.nonLanded)
+            {
+                rig.gravityScale *= 5f;
+                if (rig.velocity.y > 0.1f || rig.velocity.y < -0.1f || rig.velocity.x > 0.1f || rig.velocity.x < -0.1f)
+                {
+                    RocketDeath();
+                    land = LandType.failed;
+                }
+                else
+                {
+                    RocketWin();
+                    land = LandType.successful;
+                }
+            }
+            else if(land == LandType.successful)
             {
                 RocketDeath();
             }
-            else
-            {
-                RocketWin();
-            }
+            rig.velocity = Vector3.zero;
         }
     }
+
     void KillRocket()
     {
+        Color color = spriteR.color;
+        color.a = 0;
+        spriteR.color = color;
         Debug.Log("died");
     }
 }
