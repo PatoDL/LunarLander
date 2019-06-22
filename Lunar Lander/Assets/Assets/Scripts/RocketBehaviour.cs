@@ -4,16 +4,21 @@ using UnityEngine;
 
 public class RocketBehaviour : MonoBehaviour
 {
+    public delegate void OnRocketDeath();
+    public static OnRocketDeath rocketDeath;
     Rigidbody2D rig;
     SpriteRenderer spriteR;
     public float impulseSpeed;
     public float torqueSpeed;
     ParticleSystem particleSystem;
+    BoxCollider2D dMeasurer;
     void Start()
     {
         rig = GetComponent<Rigidbody2D>();
         spriteR = GetComponent<SpriteRenderer>();
         particleSystem = GetComponent<ParticleSystem>();
+        dMeasurer = GetComponentInChildren<BoxCollider2D>();
+        rocketDeath += KillRocket;
     }
 
     // Update is called once per frame
@@ -70,5 +75,21 @@ public class RocketBehaviour : MonoBehaviour
         }
     }
 
-    
+    void OnCollisionEnter2D(Collision2D col)
+    {
+
+        if (col.gameObject.tag == "Terrain")
+        {
+            Debug.Log(rig.velocity);
+            rig.gravityScale *= 5f;
+            if (rig.velocity.y > 0.5f || rig.velocity.y < -0.5f || rig.velocity.x > 0.5f || rig.velocity.x < -0.5f)
+            {
+                rocketDeath();
+            }
+        }
+    }
+    void KillRocket()
+    {
+        Debug.Log("died");
+    }
 }
