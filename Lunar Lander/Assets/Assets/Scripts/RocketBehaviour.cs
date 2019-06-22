@@ -5,12 +5,16 @@ using UnityEngine;
 public class RocketBehaviour : MonoBehaviour
 {
     public delegate void OnRocketDeath();
-    public static OnRocketDeath rocketDeath;
+    public static OnRocketDeath RocketDeath;
+
+    public delegate void OnRocketSuccessfulLanding();
+    public static OnRocketSuccessfulLanding RocketWin;
+
     Rigidbody2D rig;
     SpriteRenderer spriteR;
     public float impulseSpeed;
     public float torqueSpeed;
-    ParticleSystem particleSystem;
+    new ParticleSystem particleSystem;
     BoxCollider2D dMeasurer;
     void Start()
     {
@@ -18,7 +22,7 @@ public class RocketBehaviour : MonoBehaviour
         spriteR = GetComponent<SpriteRenderer>();
         particleSystem = GetComponent<ParticleSystem>();
         dMeasurer = GetComponentInChildren<BoxCollider2D>();
-        rocketDeath += KillRocket;
+        RocketDeath += KillRocket;
     }
 
     // Update is called once per frame
@@ -84,7 +88,11 @@ public class RocketBehaviour : MonoBehaviour
             rig.gravityScale *= 5f;
             if (rig.velocity.y > 0.5f || rig.velocity.y < -0.5f || rig.velocity.x > 0.5f || rig.velocity.x < -0.5f)
             {
-                rocketDeath();
+                RocketDeath();
+            }
+            else
+            {
+                RocketWin();
             }
         }
     }
