@@ -8,10 +8,12 @@ public class RocketBehaviour : MonoBehaviour
     SpriteRenderer spriteR;
     public float impulseSpeed;
     public float torqueSpeed;
+    ParticleSystem particleSystem;
     void Start()
     {
         rig = GetComponent<Rigidbody2D>();
         spriteR = GetComponent<SpriteRenderer>();
+        particleSystem = GetComponent<ParticleSystem>();
     }
 
     // Update is called once per frame
@@ -23,34 +25,26 @@ public class RocketBehaviour : MonoBehaviour
     void MovementSpaceLimiter()
     {
         Bounds bounds = CameraUtils.OrthographicBounds();
-
-        bool outOfLimits = false;
         
         bool outleft = transform.position.x < bounds.min.x + transform.localScale.y;
         if(outleft)
         {
             transform.position = new Vector3(bounds.min.x + transform.localScale.y,transform.position.y);
-            outOfLimits = true;
+            
         }
 
         bool outright = transform.position.x > bounds.max.x - transform.localScale.y;
         if(outright)
         {
             transform.position = new Vector3(bounds.max.x - transform.localScale.y, transform.position.y);
-            outOfLimits = true;
+           
         }
 
         bool outup = transform.position.y > bounds.max.y - transform.localScale.y;
         if (outup)
         {
             transform.position = new Vector3(transform.position.x, bounds.max.y - transform.localScale.y);
-            outOfLimits = true;
-        }
-
-        if(outOfLimits)
-        {
-            rig.gravityScale = 0;
-            rig.velocity = new Vector2(0, 0);
+            
         }
     }
 
@@ -59,6 +53,10 @@ public class RocketBehaviour : MonoBehaviour
         if(Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.UpArrow))
         {
             rig.AddForce(transform.up * impulseSpeed * Time.fixedDeltaTime, ForceMode2D.Impulse);
+            if (!particleSystem.isPlaying)
+                particleSystem.Play();
+            else
+                particleSystem.Emit(1);
         }
 
         if(Input.GetKey(KeyCode.RightArrow))

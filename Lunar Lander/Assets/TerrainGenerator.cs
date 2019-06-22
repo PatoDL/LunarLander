@@ -25,10 +25,24 @@ public class TerrainGenerator : MonoBehaviour
         EdgeCollider2D col = gameObject.GetComponent<EdgeCollider2D>();
         col.points = new Vector2[(int)maxVertexAmount];
 
-        for (float x = bounds.min.x, i = 0f; i < maxVertexAmount; x += bounds.max.x / (maxVertexAmount - 1), i++)
-        {            
-            lineRenderer.SetPosition((int)i, new Vector3(x, ((Mathf.PerlinNoise(x, seed))+offsetY)*bounds.max.y/2));
+        float timer = 0;
 
+        for (float x = bounds.min.x, i = 0f; i < maxVertexAmount; x += bounds.max.x / (maxVertexAmount - 1), i++)
+        {
+            timer++;
+            float y = ((Mathf.PerlinNoise(x, seed)) + offsetY) * bounds.max.y / 2;
+            int timeLimit = 200;
+            int waitTime = 20;
+            if (timer == timeLimit-1)
+                waitTime = Random.Range(20, 50);
+            if (timer > timeLimit && timer <= timeLimit + waitTime && i < maxVertexAmount - 5)
+            {
+                y = lineRenderer.GetPosition((int)i - 1).y;
+
+                if(timer==timeLimit+waitTime)
+                    timer = 0;
+            }
+            lineRenderer.SetPosition((int)i, new Vector3(x, y));
             pointsPositions.Add(lineRenderer.GetPosition((int)i));
         }
 
