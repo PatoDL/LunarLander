@@ -6,7 +6,7 @@ public class CameraUtils
 {
     public static Bounds OrthographicBoundsForRocket()
     {
-        Camera camera = Camera.main;
+        Camera camera = CameraManager.GetActiveCamera();
 
         float screenwidthLimited = Screen.width;
         float screenheightLimited = Screen.height / 3.3f;
@@ -22,7 +22,7 @@ public class CameraUtils
 
     public static Bounds OrthographicBounds()
     {
-        Camera camera = Camera.main;
+        Camera camera = CameraManager.GetActiveCamera();
 
         float screenAspect = (float)Screen.width / (float)Screen.height;
         float cameraHeight = camera.orthographicSize * 2;

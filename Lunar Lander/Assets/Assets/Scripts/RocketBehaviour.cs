@@ -35,6 +35,19 @@ public class RocketBehaviour : MonoBehaviour
     void Update()
     {
         MovementSpaceLimiter();
+        RaycastHit2D[] hitInfo = Physics2D.RaycastAll(transform.position, Vector3.down, 1);
+
+        for (int i = 0; i < hitInfo.Length; i++)
+        {
+            if (hitInfo[i].transform.tag=="Terrain" && CameraManager.GetActiveCamera().name!="ZoomedCamera")
+            {
+                CameraManager.SwitchCamera();
+            }
+            else if(CameraManager.GetActiveCamera().name != "MainCamera")
+            {
+                CameraManager.SwitchCamera();
+            }
+        }
     }
 
     void MovementSpaceLimiter()
@@ -84,13 +97,7 @@ public class RocketBehaviour : MonoBehaviour
             rig.AddTorque(torqueSpeed * Time.fixedDeltaTime, ForceMode2D.Force);
         }
 
-        RaycastHit2D hitInfo = Physics2D.Raycast(transform.position, Vector3.down);
-
-        if(hitInfo)
-            if(hitInfo.transform.tag == "Terrain")
-            {
-                Debug.Log(hitInfo.collider.name);
-            }
+        
     }
 
     void OnCollisionEnter2D(Collision2D col)
