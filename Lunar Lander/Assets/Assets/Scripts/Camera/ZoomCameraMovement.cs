@@ -15,5 +15,6 @@ public class ZoomCameraMovement : MonoBehaviour
     void Update()
     {
         transform.position = new Vector3(rocket.transform.position.x,rocket.transform.position.y,transform.position.z);
+        Debug.Log("xd");
     }
 }
