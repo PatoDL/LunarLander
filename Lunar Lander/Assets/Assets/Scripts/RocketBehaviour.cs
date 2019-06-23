@@ -23,30 +23,63 @@ public class RocketBehaviour : MonoBehaviour
     public float impulseSpeed;
     public float torqueSpeed;
     new ParticleSystem particleSystem;
+
+    Vector3 cameraStartPos;
+
     void Start()
     {
         rig = GetComponent<Rigidbody2D>();
         spriteR = GetComponent<SpriteRenderer>();
         particleSystem = GetComponent<ParticleSystem>();
         RocketDeath += KillRocket;
+        cameraStartPos = Camera.main.transform.position;
     }
 
     // Update is called once per frame
     void Update()
     {
         MovementSpaceLimiter();
-        RaycastHit2D[] hitInfo = Physics2D.RaycastAll(transform.position, Vector3.down, 1);
+        CheckIfNearTerrain(); 
+    }
 
-        for (int i = 0; i < hitInfo.Length; i++)
+    const int raycastAmount = 3;
+    float[] wingDistance = new float[raycastAmount];
+
+    void CheckIfNearTerrain()
+    {
+        int layerMask = 1 << 8;
+        RaycastHit2D hitInfo = Physics2D.Raycast(transform.position, Vector3.down, 1.5f, layerMask);
+
+        if (hitInfo)
         {
-            if (hitInfo[i].transform.tag=="Terrain" && CameraManager.GetActiveCamera().name!="ZoomedCamera")
-            {
-                CameraManager.SwitchCamera();
-            }
-            else if(CameraManager.GetActiveCamera().name != "MainCamera")
-            {
-                CameraManager.SwitchCamera();
-            }
+            Camera.main.orthographicSize = 1.37f;
+            Vector3 cameraZoomPosition = new Vector3(transform.position.x, transform.position.y, Camera.main.transform.position.z);
+            Camera.main.transform.position = cameraZoomPosition;
+            wingDistance[2] = hitInfo.distance;
+            CheckIfCorrectLanding();
+        }
+        else
+        {
+            Camera.main.orthographicSize = 5f;
+            Camera.main.transform.position = cameraStartPos;
+        }
+    }
+
+    void CheckIfCorrectLanding()
+    {
+        int layerMask = 1 << 8;
+        RaycastHit2D[] hitInfo = new RaycastHit2D[raycastAmount];
+
+        float scaleReductor = 10;
+        hitInfo[0] = Physics2D.Raycast(transform.position + transform.right/scaleReductor, -transform.up, 1, layerMask);
+        hitInfo[1] = Physics2D.Raycast(transform.position - transform.right/scaleReductor, -transform.up, 1, layerMask);
+
+        for (int i=0;i<raycastAmount-1;i++)
+        {
+            if (hitInfo[i])
+                wingDistance[i] = hitInfo[i].distance;
+            
+
         }
     }
 
@@ -76,62 +109,86 @@ public class RocketBehaviour : MonoBehaviour
         }
     }
 
+    bool validateMovement = true;
     void FixedUpdate()
     {
-        if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.UpArrow))
+        if (validateMovement)
         {
-            rig.AddForce(transform.up * impulseSpeed * Time.fixedDeltaTime, ForceMode2D.Impulse);
-            if (!particleSystem.isPlaying)
-                particleSystem.Play();
-            else
-                particleSystem.Emit(1);
-        }
+            if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.UpArrow))
+            {
+                rig.AddForce(transform.up * impulseSpeed * Time.fixedDeltaTime, ForceMode2D.Impulse);
+                if (!particleSystem.isPlaying)
+                    particleSystem.Play();
+                else
+                    particleSystem.Emit(1);
+            }
 
-        if (Input.GetKey(KeyCode.RightArrow))
-        {
-            rig.AddTorque(-torqueSpeed * Time.fixedDeltaTime, ForceMode2D.Force);
-        }
+            if (Input.GetKey(KeyCode.RightArrow))
+            {
+                rig.AddTorque(-torqueSpeed * Time.fixedDeltaTime, ForceMode2D.Force);
+            }
 
-        if (Input.GetKey(KeyCode.LeftArrow))
-        {
-            rig.AddTorque(torqueSpeed * Time.fixedDeltaTime, ForceMode2D.Force);
+            if (Input.GetKey(KeyCode.LeftArrow))
+            {
+                rig.AddTorque(torqueSpeed * Time.fixedDeltaTime, ForceMode2D.Force);
+            }
         }
-
-        
     }
 
     void OnCollisionEnter2D(Collision2D col)
     {
         if (col.gameObject.tag == "Terrain")
         {
-            Debug.Log(rig.velocity);
-            if (land == LandType.nonLanded)
+            validateMovement = false;
+            float velValue = 0.05f;
+            bool lose = false;
+            if (rig.velocity.x < velValue && rig.velocity.x > -velValue && rig.velocity.y < velValue && rig.velocity.y > -velValue)
             {
-                rig.gravityScale *= 5f;
-                if (rig.velocity.y > 0.1f || rig.velocity.y < -0.1f || rig.velocity.x > 0.1f || rig.velocity.x < -0.1f)
+                if (transform.rotation.eulerAngles.z < 3f || transform.rotation.eulerAngles.z > 360f-3f)
                 {
-                    RocketDeath();
-                    land = LandType.failed;
+                    bool validDistance = true;
+                    for (int i = 0; i < raycastAmount; i++)
+                    {
+                        for (int j = 0; j < raycastAmount; j++)
+                        {
+                            if (i != j)
+                            {
+                                if (!(wingDistance[i] < wingDistance[j] + 0.1))
+                                {
+                                    validDistance = false;
+                                }
+                            }
+                        }
+                    }
+                    if (validDistance)
+                    {
+                        RocketWin();
+                    }
+                    else
+                    {
+                        lose = true;
+                    }
                 }
                 else
                 {
-                    RocketWin();
-                    land = LandType.successful;
+                    lose = true;
                 }
             }
-            else if(land == LandType.successful)
+            else
+            {
+                lose = true;
+            }
+
+            if(lose)
             {
                 RocketDeath();
             }
-            rig.velocity = Vector3.zero;
         }
     }
 
     void KillRocket()
     {
-        Color color = spriteR.color;
-        color.a = 0;
-        spriteR.color = color;
+        spriteR.color = Color.red;
         Debug.Log("died");
     }
 }
