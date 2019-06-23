@@ -4,21 +4,15 @@ using UnityEngine;
 
 public class RocketBehaviour : MonoBehaviour
 {
-    enum LandType
-    {
-        nonLanded,
-        successful,
-        failed
-    }
+    public float altitude;
+    public float fuel = 3000f;
     public delegate void OnRocketDeath();
     public static OnRocketDeath RocketDeath;
 
     public delegate void OnRocketSuccessfulLanding();
     public static OnRocketSuccessfulLanding RocketWin;
 
-    LandType land = LandType.nonLanded;
-
-    Rigidbody2D rig;
+    public Rigidbody2D rig;
     SpriteRenderer spriteR;
     public float impulseSpeed;
     public float torqueSpeed;
@@ -39,7 +33,9 @@ public class RocketBehaviour : MonoBehaviour
     void Update()
     {
         MovementSpaceLimiter();
-        CheckIfNearTerrain(); 
+        CheckIfNearTerrain();
+        altitude = -(TerrainGenerator.minY - transform.position.y);
+        Debug.Log(TerrainGenerator.minY + "," + altitude);
     }
 
     const int raycastAmount = 3;
@@ -117,6 +113,9 @@ public class RocketBehaviour : MonoBehaviour
             if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.UpArrow))
             {
                 rig.AddForce(transform.up * impulseSpeed * Time.fixedDeltaTime, ForceMode2D.Impulse);
+                fuel -= Time.fixedDeltaTime;
+                if (fuel <= 0f)
+                    validateMovement = false;
                 if (!particleSystem.isPlaying)
                     particleSystem.Play();
                 else

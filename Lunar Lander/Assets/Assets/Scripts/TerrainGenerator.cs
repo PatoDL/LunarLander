@@ -9,9 +9,14 @@ public class TerrainGenerator : MonoBehaviour
     Bounds bounds;
     float seed;
 
+    public static float minY;
+
     void Start()
     {
         bounds = CameraUtils.OrthographicBounds();
+
+        minY = bounds.max.y;
+
         lineRenderer = GetComponent<LineRenderer>();
 
         List<Vector2> pointsPositions = new List<Vector2>(); 
@@ -42,16 +47,12 @@ public class TerrainGenerator : MonoBehaviour
                 if(timer==timeLimit+waitTime)
                     timer = 0;
             }
+            if (y < minY)
+                minY = y;
             lineRenderer.SetPosition((int)i, new Vector3(x, y));
             pointsPositions.Add(lineRenderer.GetPosition((int)i));
         }
 
         col.points = pointsPositions.ToArray();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

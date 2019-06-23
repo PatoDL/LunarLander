@@ -6,6 +6,8 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
 {
     int level;
     int score;
+    float timer;
+
 
     public GameObject rocket;
 
@@ -19,7 +21,7 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
     
     void Update()
     {
-        
+        timer += Time.deltaTime;
     }
 
     void AddScore()
@@ -31,5 +33,15 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
     {
         level++;
         Debug.Log("Successfully landed");
+    }
+
+    public int GetScore()
+    {
+        return score;
+    }
+
+    public int GetTime()
+    {
+        return (int)timer;
     }
 }
