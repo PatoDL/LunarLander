@@ -13,13 +13,18 @@ public class TerrainGenerator : MonoBehaviour
 
     void Start()
     {
+        StartTerrain();
+    }
+
+    public void StartTerrain()
+    {
         bounds = CameraUtils.OrthographicBounds();
 
         minY = bounds.max.y;
 
         lineRenderer = GetComponent<LineRenderer>();
 
-        List<Vector2> pointsPositions = new List<Vector2>(); 
+        List<Vector2> pointsPositions = new List<Vector2>();
 
         float offsetY = 0.2f;
 
@@ -38,13 +43,13 @@ public class TerrainGenerator : MonoBehaviour
             float y = ((Mathf.PerlinNoise(x, seed)) + offsetY) * bounds.max.y / 2;
             int timeLimit = 200;
             int waitTime = 20;
-            if (timer == timeLimit-1)
+            if (timer == timeLimit - 1)
                 waitTime = Random.Range(20, 50);
             if (timer > timeLimit && timer <= timeLimit + waitTime && i < maxVertexAmount - 5)
             {
                 y = lineRenderer.GetPosition((int)i - 1).y;
 
-                if(timer==timeLimit+waitTime)
+                if (timer == timeLimit + waitTime)
                     timer = 0;
             }
             if (y < minY)

@@ -7,18 +7,43 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
     int level;
     int score;
     float timer;
-
-
     public GameObject rocket;
+    public GameObject terrainGenerator;
+
+    public delegate void OnPause();
+    public static OnPause PauseGame;
+
+    public delegate void OnResume();
+    public static OnResume ResumeGame;
+
+    Vector3 cameraStartPos;
 
     void Start()
     {
         score = 0;
         level = 1;
+        cameraStartPos = Camera.main.transform.position;
         RocketBehaviour.RocketWin += AddScore;
         RocketBehaviour.RocketWin += PassLevel;
+        RocketBehaviour.RocketDeath += RestartLevel;
+        RocketBehaviour.RocketDeath += RestartScore;
     }
     
+    public void ZoomCamera(bool zoom)
+    {
+        if (zoom)
+        {
+            Camera.main.orthographicSize = 1.37f;
+            Vector3 cameraZoomPosition = new Vector3(rocket.transform.position.x, rocket.transform.position.y, Camera.main.transform.position.z);
+            Camera.main.transform.position = cameraZoomPosition;
+        }
+        else
+        {
+            Camera.main.orthographicSize = 5f;
+            Camera.main.transform.position = cameraStartPos;
+        }
+    }
+
     void Update()
     {
         timer += Time.deltaTime;
@@ -32,7 +57,19 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
     void PassLevel()
     {
         level++;
-        Debug.Log("Successfully landed");
+    }
+
+    void RestartLevel()
+    {
+        level = 0;
+    }
+
+    public float finalScore;
+
+    void RestartScore()
+    {
+        finalScore = score;
+        score = 0;
     }
 
     public int GetScore()
@@ -43,5 +80,12 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
     public int GetTime()
     {
         return (int)timer;
+    }
+
+    public void Play()
+    {
+        ZoomCamera(false);
+        rocket.GetComponent<RocketBehaviour>().RestartRocket();
+        terrainGenerator.GetComponent<TerrainGenerator>().StartTerrain();
     }
 }
