@@ -12,9 +12,13 @@ public class UICanvas : MonoBehaviour
     public GameObject firstSplashScreen;
 
     public Button quitButton;
-    
+
+    float buttonYOffset = -1f;
+
     void Start()
     {
+        Vector3 pbPos = playButton.transform.position;
+        uiRocket.transform.position = new Vector3(pbPos.x, pbPos.y + buttonYOffset);
         firstSplashScreen.GetComponent<Image>().material.color = Color.white;
         FadeLogo();
         playButton.onClick.AddListener(FadeLogo);
@@ -28,15 +32,13 @@ public class UICanvas : MonoBehaviour
     public void MoveRocketToQuitButton()
     {
         Vector3 newPos = quitButton.transform.position;
-        uiRocket.transform.position = new Vector3(newPos.x, newPos.y + 10f);
+        uiRocket.transform.position = new Vector3(newPos.x, newPos.y +buttonYOffset);
     }
 
     public void MoveRocketToPlayButton()
     {
-        Debug.Log(playButton.transform.position);
-        Vector3 newPos = Camera.main.ScreenToWorldPoint(playButton.transform.position);
-       
-        uiRocket.transform.position = new Vector3(newPos.x, newPos.y + 10f);
+        Vector3 newPos = playButton.transform.position;
+        uiRocket.transform.position = new Vector3(newPos.x,newPos.y+buttonYOffset);
     }
 
     public void FadeLogo()
