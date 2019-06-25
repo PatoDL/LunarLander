@@ -36,7 +36,6 @@ public class RocketBehaviour : MonoBehaviour
         startPosition = transform.position;
     }
 
-    // Update is called once per frame
     void Update()
     {
         MovementSpaceLimiter();
