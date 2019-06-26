@@ -14,11 +14,16 @@ public class RocketBehaviour : MonoBehaviour
     public delegate void OnRocketSuccessfulLanding();
     public static OnRocketSuccessfulLanding RocketWin;
 
+    public delegate void OnRocketResultShowed(bool lose);
+    public static OnRocketResultShowed ShowResult;
+
     public Rigidbody2D rig;
     SpriteRenderer spriteR;
     public float impulseSpeed;
     public float torqueSpeed;
     new ParticleSystem particleSystem;
+
+    GameManager g;
 
     void Awake()
     {
@@ -27,8 +32,11 @@ public class RocketBehaviour : MonoBehaviour
 
     void Start()
     {
-        spriteR = GetComponent<SpriteRenderer>();
-        particleSystem = GetComponent<ParticleSystem>();
+        g = GameObject.Find("GameManager").GetComponent<GameManager>();
+        rig = GameObject.Find("Rocket").GetComponent<Rigidbody2D>();
+        GameManager.ReloadReferences();
+        spriteR = GameObject.Find("Rocket").GetComponent<SpriteRenderer>();
+        particleSystem = GameObject.Find("Rocket").GetComponent<ParticleSystem>();
         RocketDeath += KillRocket;
         fuel = 3000f;
         GameManager.PauseGame += PauseRocket;
@@ -53,13 +61,14 @@ public class RocketBehaviour : MonoBehaviour
 
         if (hitInfo)
         {
-            GameManager.Get().ZoomCamera(true);
+            Start();
+            g.ZoomCamera(true);
             wingDistance[2] = hitInfo.distance;
             CheckIfCorrectLanding();
         }
         else
         {
-            GameManager.Get().ZoomCamera(false);
+            g.ZoomCamera(false);
         }
     }
 
@@ -109,7 +118,7 @@ public class RocketBehaviour : MonoBehaviour
         if(outOfScreen)
         {
             RocketDeath();
-            GameHUD.Get().ShowResult(outOfScreen);
+            ShowResult(outOfScreen);
             validateMovement = false;
         }
     }
@@ -196,13 +205,14 @@ public class RocketBehaviour : MonoBehaviour
                     RocketDeath();
                 }
 
-                GameHUD.Get().ShowResult(lose);
+                ShowResult(lose);
             }
         }
     }
 
     void KillRocket()
     {
+        Start();
         spriteR.color = Color.red;
     }
 
@@ -211,6 +221,7 @@ public class RocketBehaviour : MonoBehaviour
 
     void PauseRocket()
     {
+        Start();
         velocity = rig.velocity;
         rig.velocity = Vector3.zero;
         gravityScale = rig.gravityScale;

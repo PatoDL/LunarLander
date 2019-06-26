@@ -13,6 +13,7 @@ public class TerrainGenerator : MonoBehaviour
 
     void Start()
     {
+        GameManager.ReloadReferences();
         StartTerrain();
     }
 

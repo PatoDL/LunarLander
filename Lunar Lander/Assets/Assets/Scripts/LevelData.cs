@@ -10,6 +10,8 @@ public class LevelData : MonoBehaviour
     public int nextLevel;
     public int previousLevel;
 
+    public int levelThatComesFrom;
+
     void Awake()
     {
         

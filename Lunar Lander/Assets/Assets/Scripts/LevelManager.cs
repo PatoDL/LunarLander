@@ -13,7 +13,14 @@ public class LevelManager : MonoBehaviourSingleton<LevelManager>
 
     LevelData actualLevelData;
 
+    int actualLevelThatComesFrom;
+
     void Start()
+    {
+        StartNewLevel();
+    }
+
+    void StartNewLevel()
     {
         actualLevelData = GameObject.Find("LevelData").GetComponent<LevelData>();
         actualLevel = actualLevelData.level;
@@ -22,9 +29,17 @@ public class LevelManager : MonoBehaviourSingleton<LevelManager>
         actualLevelName = actualLevelData.name;
     }
 
+    void Update()
+    {
+        StartNewLevel();
+    }
+
     public void GoToMenu()
     {
         SceneManager.LoadScene(0);
+        actualLevelData.levelThatComesFrom = actualLevel;
+        StartNewLevel();
+        actualLevelThatComesFrom = actualLevel;
     }
 
     public void GoToNextLevel()

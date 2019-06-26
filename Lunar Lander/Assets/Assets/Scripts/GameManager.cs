@@ -7,8 +7,8 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
     int level;
     int score;
     float timer;
-    public GameObject rocket;
-    public GameObject terrainGenerator;
+    public static GameObject rocket;
+    public static GameObject terrainGenerator;
 
     public delegate void OnPause();
     public static OnPause PauseGame;
@@ -29,6 +29,12 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
         RocketBehaviour.RocketDeath += RestartScore;
     }
     
+    static public void ReloadReferences()
+    {
+        rocket = GameObject.Find("Rocket");
+        terrainGenerator = GameObject.Find("TerrainGenerator");
+    }
+
     public void ZoomCamera(bool zoom)
     {
         if (zoom)
