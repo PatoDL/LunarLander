@@ -24,9 +24,13 @@ public class GameHUD : MonoBehaviourSingleton<GameHUD>
 
     RocketBehaviour r;
 
+    public delegate void OnReturnToMenu();
+    public static OnReturnToMenu ReturnToMenu;
+
     void Start()
     {
         r = rocket.GetComponent<RocketBehaviour>();
+        ReturnToMenu += LevelManager.Get().GoToMenu;
     }
 
     // Update is called once per frame
@@ -38,6 +42,11 @@ public class GameHUD : MonoBehaviourSingleton<GameHUD>
         altitudeText.text = "Altitude: " + (int)r.altitude;
         xVelText.text = "xVel: " + (int)(r.rig.velocity.x*10);
         yVelText.text = "yVel: " + (int)(r.rig.velocity.y*10);
+    }
+
+    public void GoToMenu()
+    {
+        ReturnToMenu();
     }
 
     public void Pause()

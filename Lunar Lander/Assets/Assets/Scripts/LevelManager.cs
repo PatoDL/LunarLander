@@ -30,6 +30,7 @@ public class LevelManager : MonoBehaviourSingleton<LevelManager>
     public void GoToNextLevel()
     {
         SceneManager.LoadScene(nextLevel);
+        
     }
 
     public void QuitGame()
