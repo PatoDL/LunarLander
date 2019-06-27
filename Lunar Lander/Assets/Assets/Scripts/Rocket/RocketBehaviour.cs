@@ -38,9 +38,10 @@ public class RocketBehaviour : MonoBehaviour
         particleSystem = GetComponent<ParticleSystem>();
         RocketDeath += KillRocket;
         fuel = 3000f;
-        GameManager.PauseGame += PauseRocket;
-        GameManager.PauseGame += ResumeRocket;
-        GameManager.ResumeGame = ResumeRocket;
+        GameManager.PauseGame += PauseGame;
+        GameManager.PauseGame += ResumeGame;
+        GameHUD.RePlay += PauseGame;
+        GameManager.ResumeGame = ResumeGame;
         startPosition = transform.position;
     }
 
@@ -76,8 +77,9 @@ public class RocketBehaviour : MonoBehaviour
     private void OnDestroy()
     {
         RocketDeath -= KillRocket;
-        GameManager.PauseGame -= PauseRocket;
-        GameManager.PauseGame -= ResumeRocket;
+        GameManager.PauseGame -= PauseGame;
+        GameManager.PauseGame -= ResumeGame;
+        GameHUD.RePlay -= PauseGame;
     }
 
     void CheckIfCorrectLanding()
@@ -224,12 +226,12 @@ public class RocketBehaviour : MonoBehaviour
         spriteR.color = Color.red;
     }
 
-    void PauseRocket()
+    void PauseGame()
     {
         Time.timeScale = 0;
     }
 
-    void ResumeRocket()
+    public void ResumeGame()
     {
         Time.timeScale = 1;
     }

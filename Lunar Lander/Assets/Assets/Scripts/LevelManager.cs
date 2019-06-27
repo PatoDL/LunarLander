@@ -52,8 +52,9 @@ public class LevelManager : MonoBehaviourSingleton<LevelManager>
 
     public void GoToNextLevel()
     {
-        SceneManager.LoadScene(nextLevel);
-        
+        LoaderManager.Get().uiLoadingScreen.SetActive(true);
+        LoaderManager.Get().fakeLoad = true;
+        LoaderManager.Get().LoadScene(nextLevel);
     }
 
     public void QuitGame()

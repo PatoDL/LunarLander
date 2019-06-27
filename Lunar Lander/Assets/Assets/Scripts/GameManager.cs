@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviourSingleton<GameManager>
 {
-    int level;
+    public int level;
     int score;
     float timer;
     public static GameObject rocket;
@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
         RocketBehaviour.RocketWin += PassLevel;
         RocketBehaviour.RocketDeath += RestartLevel;
         RocketBehaviour.RocketDeath += RestartScore;
-        GameHUD.RePlay = Play;
+        GameHUD.RePlay += Play;
     }
     
     static public void ReloadReferences()
@@ -68,7 +68,7 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
 
     void RestartLevel()
     {
-        level = 0;
+        level = 1;
     }
 
     public float finalScore;
