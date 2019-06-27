@@ -10,10 +10,10 @@ public class LevelManager : MonoBehaviourSingleton<LevelManager>
     int nextLevel;
     int prevLevel;
     string actualLevelName;
-
+    int actualLevelThatComesFrom;
     LevelData actualLevelData;
 
-    int actualLevelThatComesFrom;
+    int savedLevelThatComesFrom;
 
     void Start()
     {
@@ -29,6 +29,12 @@ public class LevelManager : MonoBehaviourSingleton<LevelManager>
         nextLevel = actualLevelData.nextLevel;
         prevLevel = actualLevelData.previousLevel;
         actualLevelName = actualLevelData.name;
+        actualLevelThatComesFrom = actualLevelData.levelThatComesFrom;
+    }
+
+    public int GetLevelThatComesFrom()
+    {
+        return actualLevelThatComesFrom;
     }
 
     void Update()
@@ -39,9 +45,9 @@ public class LevelManager : MonoBehaviourSingleton<LevelManager>
     public void GoToMenu()
     {
         SceneManager.LoadScene(0);
-        actualLevelData.levelThatComesFrom = actualLevel;
+        actualLevelData.levelThatComesFrom = savedLevelThatComesFrom;
         StartNewLevel();
-        actualLevelThatComesFrom = actualLevel;
+        savedLevelThatComesFrom = actualLevel;
     }
 
     public void GoToNextLevel()

@@ -30,11 +30,19 @@ public class UICanvas : MonoBehaviour
         Vector3 pbPos = playButton.transform.position;
         uiRocket.transform.position = new Vector3(pbPos.x, pbPos.y + buttonYOffset);
         fadePanel.GetComponent<Image>().material.color = Color.white;
-        FadeLogo();
-        playButton.onClick.AddListener(FadeLogo);
-        titleTruePos = title.transform.position;
-        title.GetComponent<Image>().material.color = new Color(1, 1, 1, 0);
-        title.transform.position = bounds.max / 2;
+        Debug.Log( LevelManager.Get().GetLevelThatComesFrom());
+        if (LevelManager.Get().GetLevelThatComesFrom() == -1)
+        {
+            FadeLogo();
+            titleTruePos = title.transform.position;
+            title.GetComponent<Image>().material.color = new Color(1, 1, 1, 0);
+            title.transform.position = bounds.max / 2;
+        }
+        else
+        {
+            fadePanel.SetActive(false);
+            uiRocket.GetComponent<ParticleSystem>().Play();
+        }
     }
 
     public void QuitGame()

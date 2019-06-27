@@ -343,6 +343,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d473b3f14cc70a049a835d4543777bd9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  actualLevelThatComesFrom: 0
 --- !u!4 &404400758
 Transform:
   m_ObjectHideFlags: 0
@@ -5258,7 +5259,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 404400757}
+      - m_Target: {fileID: 292951814}
         m_MethodName: QuitGame
         m_Mode: 1
         m_Arguments:
@@ -5920,3 +5921,4 @@ MonoBehaviour:
   name: Menu
   nextLevel: 1
   previousLevel: -1
+  levelThatComesFrom: -1
