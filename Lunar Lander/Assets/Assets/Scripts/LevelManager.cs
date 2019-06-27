@@ -5,7 +5,6 @@ using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviourSingleton<LevelManager>
 {
-    int maxAmountOfLevels = 2;
     int actualLevel;
     int nextLevel;
     int prevLevel;
@@ -30,6 +29,11 @@ public class LevelManager : MonoBehaviourSingleton<LevelManager>
         prevLevel = actualLevelData.previousLevel;
         actualLevelName = actualLevelData.name;
         actualLevelThatComesFrom = actualLevelData.levelThatComesFrom;
+    }
+
+    public int GetActualLevel()
+    {
+        return actualLevel;
     }
 
     public int GetLevelThatComesFrom()

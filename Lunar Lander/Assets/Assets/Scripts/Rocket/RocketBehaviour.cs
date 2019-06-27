@@ -43,6 +43,7 @@ public class RocketBehaviour : MonoBehaviour
         GameHUD.RePlay += PauseGame;
         GameManager.ResumeGame = ResumeGame;
         startPosition = transform.position;
+        RocketDeath += RestartFuel;
     }
 
     void Update()
@@ -51,6 +52,11 @@ public class RocketBehaviour : MonoBehaviour
         CheckIfNearTerrain();
         altitude = -(TerrainGenerator.minY - transform.position.y);
         rig.gravityScale = gravityScale;
+    }
+
+    void RestartFuel()
+    {
+        fuel = 3000;
     }
 
     const int raycastAmount = 3;
@@ -77,6 +83,7 @@ public class RocketBehaviour : MonoBehaviour
     private void OnDestroy()
     {
         RocketDeath -= KillRocket;
+        RocketDeath -= RestartFuel;
         GameManager.PauseGame -= PauseGame;
         GameManager.PauseGame -= ResumeGame;
         GameHUD.RePlay -= PauseGame;

@@ -13,6 +13,8 @@ public class UICanvas : MonoBehaviour
 
     public Button quitButton;
 
+    public Button creditsButton;
+
     public GameObject title;
 
     float buttonYOffset = -1f;
@@ -30,7 +32,6 @@ public class UICanvas : MonoBehaviour
         Vector3 pbPos = playButton.transform.position;
         uiRocket.transform.position = new Vector3(pbPos.x, pbPos.y + buttonYOffset);
         fadePanel.GetComponent<Image>().material.color = Color.white;
-        Debug.Log( LevelManager.Get().GetLevelThatComesFrom());
         if (LevelManager.Get().GetLevelThatComesFrom() == -1)
         {
             FadeLogo();
@@ -60,6 +61,12 @@ public class UICanvas : MonoBehaviour
     {
         Vector3 newPos = playButton.transform.position;
         uiRocket.transform.position = new Vector3(newPos.x,newPos.y+buttonYOffset);
+    }
+
+    public void MoveRocketToCreditsButton()
+    {
+        Vector3 newPos = creditsButton.transform.position;
+        uiRocket.transform.position = new Vector3(newPos.x, newPos.y + buttonYOffset);
     }
 
     public void FadeLogo()

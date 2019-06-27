@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
         RocketBehaviour.RocketWin += PassLevel;
         RocketBehaviour.RocketDeath += RestartLevel;
         RocketBehaviour.RocketDeath += RestartScore;
+        RocketBehaviour.RocketDeath += RestartTime;
         GameHUD.RePlay += Play;
     }
     
@@ -53,7 +54,8 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
 
     void Update()
     {
-        timer += Time.deltaTime;
+        if(LevelManager.Get().GetActualLevel()!=0)
+            timer += Time.deltaTime;
     }
 
     void AddScore()
@@ -69,6 +71,11 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
     void RestartLevel()
     {
         level = 1;
+    }
+
+    void RestartTime()
+    {
+        timer = 0;
     }
 
     public float finalScore;

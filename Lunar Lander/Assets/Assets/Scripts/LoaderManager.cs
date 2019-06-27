@@ -9,11 +9,9 @@ public class LoaderManager : MonoBehaviourSingleton<LoaderManager>
     public float timeLoading;
     public float minTimeToLoad = 2;
     public GameObject uiLoadingScreen;
-    public GameObject rocket;
 
     void Start()
     {
-        ReloadReference();
         GameHUD.RePlay += FakeLoad;
     }
 
@@ -21,12 +19,6 @@ public class LoaderManager : MonoBehaviourSingleton<LoaderManager>
     {
         uiLoadingScreen.SetActive(true);
         StartCoroutine(AsynchronousFakeLoad());
-    }
-
-    void ReloadReference()
-    {
-        GameObject.Find("UILoadingScreen");
-        GameObject.Find("Rocket");
     }
 
     public void LoadScene(int scene)
@@ -55,7 +47,7 @@ public class LoaderManager : MonoBehaviourSingleton<LoaderManager>
             if(loadingProgress>=1)
             {
                 loadingProgress = 1;
-                rocket.GetComponent<RocketBehaviour>().ResumeGame();
+                GameManager.ResumeGame();
             }
 
 
@@ -80,7 +72,6 @@ public class LoaderManager : MonoBehaviourSingleton<LoaderManager>
             if (ao.progress >= 0.9f)
             {
                 ao.allowSceneActivation = true;
-                ReloadReference();
             }
 
             yield return null;
