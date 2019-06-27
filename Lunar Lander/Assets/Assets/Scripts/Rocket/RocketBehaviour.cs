@@ -21,9 +21,8 @@ public class RocketBehaviour : MonoBehaviour
     SpriteRenderer spriteR;
     public float impulseSpeed;
     public float torqueSpeed;
+    public float gravityScale = 0.05f;
     new ParticleSystem particleSystem;
-
-    GameManager g;
 
     void Awake()
     {
@@ -39,7 +38,8 @@ public class RocketBehaviour : MonoBehaviour
         particleSystem = GetComponent<ParticleSystem>();
         RocketDeath += KillRocket;
         fuel = 3000f;
-        GameManager.PauseGame = PauseRocket;
+        GameManager.PauseGame += PauseRocket;
+        GameManager.PauseGame += ResumeRocket;
         GameManager.ResumeGame = ResumeRocket;
         startPosition = transform.position;
     }
@@ -49,6 +49,7 @@ public class RocketBehaviour : MonoBehaviour
         MovementSpaceLimiter();
         CheckIfNearTerrain();
         altitude = -(TerrainGenerator.minY - transform.position.y);
+        rig.gravityScale = gravityScale;
     }
 
     const int raycastAmount = 3;
@@ -75,6 +76,8 @@ public class RocketBehaviour : MonoBehaviour
     private void OnDestroy()
     {
         RocketDeath -= KillRocket;
+        GameManager.PauseGame -= PauseRocket;
+        GameManager.PauseGame -= ResumeRocket;
     }
 
     void CheckIfCorrectLanding()
@@ -221,22 +224,14 @@ public class RocketBehaviour : MonoBehaviour
         spriteR.color = Color.red;
     }
 
-    public Vector3 velocity;
-    float gravityScale;
-
     void PauseRocket()
     {
-        //;
-        velocity = rig.velocity;
-        rig.velocity = Vector3.zero;
-        gravityScale = rig.gravityScale;
-        rig.gravityScale = 0f;
+        Time.timeScale = 0;
     }
 
     void ResumeRocket()
     {
-        rig.velocity = velocity;
-        rig.gravityScale = gravityScale;
+        Time.timeScale = 1;
     }
 
     public void RestartRocket()

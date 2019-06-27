@@ -1143,7 +1143,7 @@ MonoBehaviour:
   rig: {fileID: 0}
   impulseSpeed: 1
   torqueSpeed: 1
-  velocity: {x: 0, y: 0, z: 0}
+  gravityScale: 0.05
 --- !u!61 &750088047
 BoxCollider2D:
   m_ObjectHideFlags: 0

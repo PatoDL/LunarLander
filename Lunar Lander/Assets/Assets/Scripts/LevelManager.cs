@@ -19,6 +19,7 @@ public class LevelManager : MonoBehaviourSingleton<LevelManager>
     {
         StartNewLevel();
         GameHUD.ReturnToMenu = GoToMenu;
+        UICanvas.Quit = QuitGame;
     }
 
     void StartNewLevel()

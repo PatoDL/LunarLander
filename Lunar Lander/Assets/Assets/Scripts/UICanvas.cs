@@ -21,6 +21,9 @@ public class UICanvas : MonoBehaviour
 
     Vector3 titleTruePos;
 
+    public delegate void OnGameQuitted();
+    public static OnGameQuitted Quit;
+
     void Start()
     {
         bounds = CameraUtils.OrthographicBounds();
@@ -34,9 +37,9 @@ public class UICanvas : MonoBehaviour
         title.transform.position = bounds.max / 2;
     }
 
-    void Update()
+    public void QuitGame()
     {
-        
+        Quit();
     }
 
     public void MoveRocketToQuitButton()

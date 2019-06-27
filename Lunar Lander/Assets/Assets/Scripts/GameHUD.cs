@@ -30,33 +30,8 @@ public class GameHUD : MonoBehaviour
     public delegate void OnPlayAgain();
     public static OnPlayAgain RePlay;
 
-    static GameHUD instance;
-
-    static public GameHUD Get()
-    {
-        return instance;
-    }
-
-    void Awake()
-    {
-        if(instance==null)
-        {
-            instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
-
-    GameManager gm;
-
-    LevelManager lm;
-
     void Start()
     {
-        //gm = GameObject.Find("GameManager").GetComponent<GameManager>();
-        //lm = GameObject.Find("LevelManager").GetComponent<LevelManager>();
         r = rocket.GetComponent<RocketBehaviour>();
         RocketBehaviour.ShowResult = ShowResult;
     }
@@ -89,7 +64,7 @@ public class GameHUD : MonoBehaviour
 
     public void PlayAgain()
     {
-
+        RePlay();
     }
 
     public void ShowResult(bool lose)
