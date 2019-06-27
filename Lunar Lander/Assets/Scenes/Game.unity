@@ -6023,8 +6023,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5648269ff4618c84e8cb30f82f38b89d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rocket: {fileID: 750088042}
-  terrainGenerator: {fileID: 666591923}
   finalScore: 0
 --- !u!4 &1112401967
 Transform:
@@ -6152,6 +6150,7 @@ MonoBehaviour:
   name: Game
   nextLevel: 2
   previousLevel: 1
+  levelThatComesFrom: 0
 --- !u!4 &1251255806
 Transform:
   m_ObjectHideFlags: 0
@@ -6514,8 +6513,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1112401966}
-        m_MethodName: Play
+      - m_Target: {fileID: 15818443}
+        m_MethodName: PlayAgain
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

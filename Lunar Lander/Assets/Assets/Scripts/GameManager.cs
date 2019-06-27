@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
         RocketBehaviour.RocketWin += PassLevel;
         RocketBehaviour.RocketDeath += RestartLevel;
         RocketBehaviour.RocketDeath += RestartScore;
+        GameHUD.RePlay = Play;
     }
     
     static public void ReloadReferences()

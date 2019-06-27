@@ -27,6 +27,9 @@ public class GameHUD : MonoBehaviour
     public delegate void OnReturnToMenu();
     public static OnReturnToMenu ReturnToMenu;
 
+    public delegate void OnPlayAgain();
+    public static OnPlayAgain RePlay;
+
     static GameHUD instance;
 
     static public GameHUD Get()
@@ -52,19 +55,17 @@ public class GameHUD : MonoBehaviour
 
     void Start()
     {
-        gm = GameObject.Find("GameManager").GetComponent<GameManager>();
-        lm = GameObject.Find("LevelManager").GetComponent<LevelManager>();
+        //gm = GameObject.Find("GameManager").GetComponent<GameManager>();
+        //lm = GameObject.Find("LevelManager").GetComponent<LevelManager>();
         r = rocket.GetComponent<RocketBehaviour>();
-        ReturnToMenu += lm.GoToMenu;
-        RocketBehaviour.ShowResult += ShowResult;
+        RocketBehaviour.ShowResult = ShowResult;
     }
 
     // Update is called once per frame
     void Update()
     {
-        Start();
-        scoreText.text = "Score: " + gm.GetScore();
-        timeText.text = "Time: " + gm.GetTime();
+        scoreText.text = "Score: " + GameManager.Get().GetScore();
+        timeText.text = "Time: " + GameManager.Get().GetTime();
         fuelText.text = "Fuel: " + (int)r.fuel;
         altitudeText.text = "Altitude: " + (int)r.altitude;
         xVelText.text = "xVel: " + (int)(r.rig.velocity.x*10);
@@ -86,6 +87,11 @@ public class GameHUD : MonoBehaviour
         GameManager.ResumeGame();
     }
 
+    public void PlayAgain()
+    {
+
+    }
+
     public void ShowResult(bool lose)
     {
         landResultPanel.SetActive(true);
@@ -93,13 +99,13 @@ public class GameHUD : MonoBehaviour
         {
             landResult.text = "Landing Failed";
             keepPlayingText.text = "Try Again";
-            resultScoreText.text = "Final Score: " + gm.finalScore;
+            resultScoreText.text = "Final Score: " + GameManager.Get().finalScore;
         }
         else
         {
             landResult.text = "Successful Landing";
             keepPlayingText.text = "Next Level";
-            resultScoreText.text = "Actual Score: " + gm.GetScore();
+            resultScoreText.text = "Actual Score: " + GameManager.Get().GetScore();
         }
     }
 }

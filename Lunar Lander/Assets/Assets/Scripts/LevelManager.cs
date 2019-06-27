@@ -18,6 +18,7 @@ public class LevelManager : MonoBehaviourSingleton<LevelManager>
     void Start()
     {
         StartNewLevel();
+        GameHUD.ReturnToMenu = GoToMenu;
     }
 
     void StartNewLevel()

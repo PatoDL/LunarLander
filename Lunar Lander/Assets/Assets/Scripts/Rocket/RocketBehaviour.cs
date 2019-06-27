@@ -32,15 +32,15 @@ public class RocketBehaviour : MonoBehaviour
 
     void Start()
     {
-        g = GameObject.Find("GameManager").GetComponent<GameManager>();
-        rig = GameObject.Find("Rocket").GetComponent<Rigidbody2D>();
+        //g = GameObject.Find("GameManager").GetComponent<GameManager>();
+        rig = GetComponent<Rigidbody2D>();
         GameManager.ReloadReferences();
-        spriteR = GameObject.Find("Rocket").GetComponent<SpriteRenderer>();
-        particleSystem = GameObject.Find("Rocket").GetComponent<ParticleSystem>();
+        spriteR = GetComponent<SpriteRenderer>();
+        particleSystem = GetComponent<ParticleSystem>();
         RocketDeath += KillRocket;
         fuel = 3000f;
-        GameManager.PauseGame += PauseRocket;
-        GameManager.ResumeGame += ResumeRocket;
+        GameManager.PauseGame = PauseRocket;
+        GameManager.ResumeGame = ResumeRocket;
         startPosition = transform.position;
     }
 
@@ -61,15 +61,20 @@ public class RocketBehaviour : MonoBehaviour
 
         if (hitInfo)
         {
-            Start();
-            g.ZoomCamera(true);
+            //;
+            GameManager.Get().ZoomCamera(true);
             wingDistance[2] = hitInfo.distance;
             CheckIfCorrectLanding();
         }
         else
         {
-            g.ZoomCamera(false);
+            GameManager.Get().ZoomCamera(false);
         }
+    }
+
+    private void OnDestroy()
+    {
+        RocketDeath -= KillRocket;
     }
 
     void CheckIfCorrectLanding()
@@ -212,7 +217,7 @@ public class RocketBehaviour : MonoBehaviour
 
     void KillRocket()
     {
-        Start();
+        //;
         spriteR.color = Color.red;
     }
 
@@ -221,7 +226,7 @@ public class RocketBehaviour : MonoBehaviour
 
     void PauseRocket()
     {
-        Start();
+        //;
         velocity = rig.velocity;
         rig.velocity = Vector3.zero;
         gravityScale = rig.gravityScale;
