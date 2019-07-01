@@ -40,7 +40,6 @@ public class RocketBehaviour : MonoBehaviour
         fuel = 3000f;
         GameManager.PauseGame += PauseGame;
         GameHUD.ReturnToMenu += ResumeGame;
-        //GameManager.PauseGame += ResumeGame;
         GameHUD.RePlay += PauseGame;
         GameManager.ResumeGame = ResumeGame;
         startPosition = transform.position;
@@ -86,7 +85,6 @@ public class RocketBehaviour : MonoBehaviour
         RocketDeath -= KillRocket;
         RocketDeath -= RestartFuel;
         GameManager.PauseGame -= PauseGame;
-        //GameManager.PauseGame -= ResumeGame;
         GameHUD.RePlay -= PauseGame;
         GameHUD.ReturnToMenu -= ResumeGame;
     }
@@ -179,51 +177,86 @@ public class RocketBehaviour : MonoBehaviour
         {
             if (col.gameObject.tag == "Terrain")
             {
+
+                string error = "none";
                 validateMovement = false;
                 float velValue = 0.05f;
                 bool lose = false;
-                if (rig.velocity.x < velValue && rig.velocity.x > -velValue && rig.velocity.y < velValue && rig.velocity.y > -velValue)
+                if (!(rig.velocity.x < velValue && rig.velocity.x > -velValue && rig.velocity.y < velValue && rig.velocity.y > -velValue))
                 {
-                    if (transform.rotation.eulerAngles.z < 3f || transform.rotation.eulerAngles.z > 360f - 3f)
+                    lose = true;
+                    error = "vel";
+                }
+
+                if (!lose && !(transform.rotation.eulerAngles.z < 3f || transform.rotation.eulerAngles.z > 360f - 3f))
+                {
+                    lose = true;
+                    error = "rot";
+                }
+
+                if (!lose)
+                {
+                    for (int i = 0; i < raycastAmount; i++)
                     {
-                        bool validDistance = true;
-                        for (int i = 0; i < raycastAmount; i++)
+                        for (int j = 0; j < raycastAmount; j++)
                         {
-                            for (int j = 0; j < raycastAmount; j++)
+                            if (i != j)
                             {
-                                if (i != j)
+                                if (wingDistance[i] < wingDistance[j] + 0.1)
                                 {
-                                    if (!(wingDistance[i] < wingDistance[j] + 0.1))
-                                    {
-                                        validDistance = false;
-                                    }
+                                    lose = true;
+                                    error = "cast";
                                 }
                             }
                         }
-                        if (validDistance)
-                        {
-                            RocketWin();
-                        }
-                        else
-                        {
-                            lose = true;
-                        }
-                    }
-                    else
-                    {
-                        lose = true;
                     }
                 }
-                else
-                {
-                    lose = true;
-                }
+
+                
+
+                //if (rig.velocity.x < velValue && rig.velocity.x > -velValue && rig.velocity.y < velValue && rig.velocity.y > -velValue)
+                //{
+                //    if (transform.rotation.eulerAngles.z < 3f || transform.rotation.eulerAngles.z > 360f - 3f)
+                //    {
+                //        bool validDistance = true;
+                //        for (int i = 0; i < raycastAmount; i++)
+                //        {
+                //            for (int j = 0; j < raycastAmount; j++)
+                //            {
+                //                if (i != j)
+                //                {
+                //                    if (!(wingDistance[i] < wingDistance[j] + 0.1))
+                //                    {
+                //                        validDistance = false;
+                //                    }
+                //                }
+                //            }
+                //        }
+                //        if (validDistance)
+                //        {
+                //            RocketWin();
+                //        }
+                //        else
+                //        {
+                //            lose = true;
+                //        }
+                //    }
+                //    else
+                //    {
+                //        lose = true;
+                //    }
+                //}
+                //else
+                //{
+                //    lose = true;
+                //}
 
                 if (lose)
                 {
                     RocketDeath();
                 }
-
+                
+                Debug.Log(error);
                 ShowResult(lose);
             }
         }

@@ -6506,11 +6506,11 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 292951814}
-          m_MethodName: MoveRocketToPlayButton
-          m_Mode: 1
+          m_MethodName: Pepe
+          m_Mode: 2
           m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_ObjectArgument: {fileID: 1570712516}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
@@ -6851,7 +6851,6 @@ MonoBehaviour:
   timeLoading: 0
   minTimeToLoad: 2
   uiLoadingScreen: {fileID: 1473312687}
-  rocket: {fileID: 0}
 --- !u!4 &1935247087
 Transform:
   m_ObjectHideFlags: 0

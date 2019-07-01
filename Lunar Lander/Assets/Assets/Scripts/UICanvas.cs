@@ -51,6 +51,11 @@ public class UICanvas : MonoBehaviour
         Quit();
     }
 
+    public void Pepe(Button i)
+    {
+
+    }
+
     public void MoveRocketToQuitButton()
     {
         Vector3 newPos = quitButton.transform.position;
