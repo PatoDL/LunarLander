@@ -39,7 +39,8 @@ public class RocketBehaviour : MonoBehaviour
         RocketDeath += KillRocket;
         fuel = 3000f;
         GameManager.PauseGame += PauseGame;
-        GameManager.PauseGame += ResumeGame;
+        GameHUD.ReturnToMenu += ResumeGame;
+        //GameManager.PauseGame += ResumeGame;
         GameHUD.RePlay += PauseGame;
         GameManager.ResumeGame = ResumeGame;
         startPosition = transform.position;
@@ -85,8 +86,9 @@ public class RocketBehaviour : MonoBehaviour
         RocketDeath -= KillRocket;
         RocketDeath -= RestartFuel;
         GameManager.PauseGame -= PauseGame;
-        GameManager.PauseGame -= ResumeGame;
+        //GameManager.PauseGame -= ResumeGame;
         GameHUD.RePlay -= PauseGame;
+        GameHUD.ReturnToMenu -= ResumeGame;
     }
 
     void CheckIfCorrectLanding()
